@@ -1,6 +1,10 @@
 import { WHATSAPP_LINK } from "../constants";
 
-export default function Footer() {
+type FooterProps = {
+  onSecretClick?: () => void;
+};
+
+export default function Footer({ onSecretClick }: FooterProps) {
   const year = new Date().getFullYear();
   
   return (
@@ -16,7 +20,7 @@ export default function Footer() {
         </a>
         
         <p className="text-brand-navy font-medium text-sm">
-          &copy; {year} AHAVA DIGITAL. All Rights Reserved.
+          &copy; <span onDoubleClick={onSecretClick} className="cursor-default">{year}</span> AHAVA DIGITAL. All Rights Reserved.
         </p>
         <p className="text-gray-500 mt-2 text-xs">
           This site is not a part of the Facebook website or Facebook Inc. Additionally, this site is NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.

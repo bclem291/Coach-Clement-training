@@ -71,16 +71,7 @@ export default function App() {
         <ImagesSection customImages={images} />
         <FinalCTA />
       </main>
-      <Footer />
-
-      {/* Admin Dashboard Floating Button */}
-      <button
-        onClick={() => setIsAdminOpen(true)}
-        className="fixed bottom-6 right-6 bg-brand-navy text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-transform z-50 group flex items-center justify-center border-2 border-white/20"
-        title="Admin Dashboard"
-      >
-        <Settings className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
-      </button>
+      <Footer onSecretClick={() => setIsAdminOpen(true)} />
     </div>
   );
 }
