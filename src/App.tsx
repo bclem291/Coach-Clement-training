@@ -15,7 +15,6 @@ import ImagesSection from './components/ImagesSection';
 import FinalCTA from './components/FinalCTA';
 import Footer from './components/Footer';
 import AdminDashboard from './components/AdminDashboard';
-import { Settings } from 'lucide-react';
 
 export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);

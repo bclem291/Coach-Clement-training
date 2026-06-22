@@ -1,79 +1,92 @@
-import { X, Upload, Home } from "lucide-react";
+import { useState, useRef } from 'react';
+import { X, Upload, Trash2 } from 'lucide-react';
 
-type AdminProps = {
+type AdminDashboardProps = {
   onClose: () => void;
-  images: { trainer: string; session: string; workspace: string; community: string };
+  images: {
+    trainer: string;
+    session: string;
+    workspace: string;
+    community: string;
+  };
   onUpload: (key: string, file: File) => void;
   onClear: (key: string) => void;
 };
 
-export default function AdminDashboard({ onClose, images, onUpload, onClear }: AdminProps) {
-  const blocks = [
-    { key: 'trainer', label: 'Trainer Portrait' },
-    { key: 'session', label: 'Training Session' },
-    { key: 'workspace', label: 'Brand Workspace' },
-    { key: 'community', label: 'Community & Support' }
+export default function AdminDashboard({ onClose, images, onUpload, onClear }: AdminDashboardProps) {
+  const sections = [
+    { key: 'trainer', label: 'Trainer Image (Square/Portrait)', desc: 'Image of Coach Clement' },
+    { key: 'session', label: 'Session Image (Landscape/Square)', desc: 'Image of a coaching session' },
+    { key: 'workspace', label: 'Workspace Image (Landscape)', desc: 'Image of the workspace/laptop' },
+    { key: 'community', label: 'Community Image (Any)', desc: 'Image representing community or income' },
   ];
 
   return (
-    <div className="min-h-screen bg-sky-50 flex flex-col font-sans">
-      <div className="bg-brand-navy text-white px-6 py-4 flex justify-between items-center shadow-lg sticky top-0 z-10">
-        <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-3">
-          <Upload className="w-6 h-6 text-brand-red" /> Admin Dashboard
-        </h1>
-        <button onClick={onClose} className="bg-white/10 hover:bg-white/20 px-4 py-2 border border-white/20 rounded-xl flex items-center gap-2 transition-all shadow-sm">
-          <Home className="w-4 h-4" /> <span className="hidden sm:inline">Back to Site</span>
-        </button>
-      </div>
-
-      <div className="max-w-5xl mx-auto w-full p-6 py-12">
-        <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-xl border border-sky-100">
-          <div className="text-center mb-10">
-             <h2 className="text-3xl font-black text-brand-navy mb-4">Manage Site Images</h2>
-             <p className="text-gray-600 max-w-xl mx-auto">Upload images to replace the placeholders on the main page. Best dimensions are portrait or square (e.g., 4:5 aspect ratio).</p>
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Admin Image Upload</h2>
+            <p className="text-gray-500 text-sm">Upload custom images to display on the landing page</p>
           </div>
+          <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {blocks.map((b) => (
-              <div key={b.key} className="bg-sky-50/50 border border-sky-100 rounded-2xl p-6 shadow-sm flex flex-col items-center">
-                <h3 className="font-bold text-lg mb-6 text-brand-navy">{b.label}</h3>
-
-                {images[b.key as keyof typeof images] ? (
-                  <div className="relative aspect-[4/5] w-full mb-6 rounded-xl overflow-hidden border-4 border-white shadow-md">
-                    <img src={images[b.key as keyof typeof images]} alt={b.label} className="w-full h-full object-cover" />
-                    <button
-                      onClick={() => onClear(b.key)}
-                      className="absolute top-3 right-3 bg-red-600/90 backdrop-blur-sm text-white p-2.5 rounded-full hover:bg-red-700 shadow-xl transition-all hover:scale-105 active:scale-95"
-                      title="Remove Image"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
+        <div className="p-6 overflow-y-auto flex-grow">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {sections.map(({ key, label, desc }) => (
+              <div key={key} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                <div className="mb-4">
+                  <h3 className="font-semibold text-gray-800">{label}</h3>
+                  <p className="text-xs text-gray-500">{desc}</p>
+                </div>
+                
+                {images[key as keyof typeof images] ? (
+                  <div className="relative group rounded-lg overflow-hidden border border-gray-200 bg-gray-100 aspect-video flex-shrink-0">
+                    <img src={images[key as keyof typeof images]} alt={label} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button 
+                        onClick={() => onClear(key)}
+                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg"
+                        title="Remove Image"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="aspect-[4/5] w-full mb-6 border-2 border-dashed border-sky-200 rounded-xl flex items-center justify-center bg-white text-sky-400 flex-col gap-3 shadow-inner">
-                     <Upload className="w-10 h-10 mb-2 opacity-50" />
-                     <span className="text-sm font-semibold opacity-70">No image uploaded</span>
+                  <div className="aspect-video">
+                    <label className="w-full h-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg shrink-0 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors bg-white">
+                      <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                      <span className="text-sm text-gray-500 font-medium">Click to upload</span>
+                      <span className="text-xs text-gray-400 mt-1">PNG, JPG up to 5MB</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            onUpload(key, e.target.files[0]);
+                          }
+                        }}
+                      />
+                    </label>
                   </div>
                 )}
-
-                <label className="mt-auto w-full group">
-                  <div className="flex items-center justify-center gap-2 w-full bg-brand-navy group-hover:bg-blue-900 text-white py-3 rounded-xl cursor-pointer font-bold transition-all shadow-md active:scale-95">
-                    <Upload className="w-4 h-4" />
-                    {images[b.key as keyof typeof images] ? 'Change Image' : 'Upload Image'}
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) onUpload(b.key, file);
-                    }}
-                  />
-                </label>
               </div>
             ))}
           </div>
+        </div>
+        
+        <div className="p-6 border-t border-gray-100 bg-gray-50 shrink-0 flex justify-end">
+          <button 
+            onClick={onClose}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          >
+            Save & Close
+          </button>
         </div>
       </div>
     </div>
