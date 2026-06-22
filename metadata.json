@@ -1,0 +1,7 @@
+{
+  "name": "AI Wealth Mastery Training",
+  "description": "Free WhatsApp training on how to make money online using Artificial Intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
